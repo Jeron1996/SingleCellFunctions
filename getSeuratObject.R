@@ -1,4 +1,5 @@
 ## Commands to get NonNormalized, percent.mt regressed out Seurat Object for the Hansbro collaboration
+.libPaths("/share/ClusterShare/software/contrib/jerven/R/3.6/")
 library(ggforce)
 library(Seurat)
 library(ggplot2)
@@ -7,11 +8,11 @@ library(stringr)
 library(DropletUtils)
 library(dplyr)
 library(Matrix)
-source(file = "/share/ScratchGeneral/jerven/scripts/191202-emptydrop.R")
-source(file = "/share/ScratchGeneral/jerven/scripts/191209-QC_plots.R")
-source(file = "/share/ScratchGeneral/jerven/scripts/191211-hashing_workflow.R")
+library(devtools)
+source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/master/191202-emptydrop.R")
+source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/master/191211-hashing_workflow.R")
+source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/master/191209-QC_plots.R")
 set.seed(160396)
-.libPaths("/share/ClusterShare/software/contrib/jerven/R/3.6/")
 ###Start workflow by filtering out empty droplets using e.drop command
 raw_data_dirs <- paste0("R://Zilog-Cancer-TumourDevelopment/190510-HANSBRO1-SingleCellData/collection", c(1:6), "/RNA/output/outs/raw_feature_bc_matrix/")
 pro.name <- paste0("Collection", c(1:6))
@@ -76,7 +77,7 @@ seurat_merged <- CellCycleScoring(object = seurat_merged, s.features = s.genes, 
 saveRDS(object = seurat_merged, file = paste0(seurat_dir, "/200221_ALL_merged_withSeed.RDS"))
 
 #Make and save several Plots
-plots_cluster(seurat.object == seurat_merged, save.name = "200221_ALL_merged_withSeed", dir = plot_dir)
+plots_cluster(seurat.object = seurat_merged, save.name = "200221_ALL_merged_withSeed", dir = plot_dir)
 
 #Perform Seurat analysis again, but this time regress out percent.mt
 
@@ -98,4 +99,4 @@ seurat_regressed <- RunUMAP(seurat_regressed, dims = 1:20)
 saveRDS(object = seurat_regressed, file = paste0(seurat_dir, "/200221_ALL_merged_MT_regressed_withSeed.RDS"))
 
 #Make plots
-plots_cluster(seurat.object == seurat_regressed, save.name = "200221_ALL_merged_MT_regressed_withSeed", dir = plot_dir)
+plots_cluster(seurat.object = seurat_regressed, save.name = "200221_ALL_merged_MT_regressed_withSeed", dir = plot_dir)

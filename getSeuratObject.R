@@ -1,4 +1,5 @@
 ## Commands to get NonNormalized, percent.mt regressed out Seurat Object for the Hansbro collaboration
+.libPaths("/share/ClusterShare/software/contrib/jerven/R/3.6/")
 library(ggforce)
 library(Seurat)
 library(ggplot2)
@@ -7,11 +8,11 @@ library(stringr)
 library(DropletUtils)
 library(dplyr)
 library(Matrix)
-source(file = "/share/ScratchGeneral/jerven/scripts/191202-emptydrop.R")
-source(file = "/share/ScratchGeneral/jerven/scripts/191209-QC_plots.R")
-source(file = "/share/ScratchGeneral/jerven/scripts/191211-hashing_workflow.R")
+library(devtools)
+source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/master/191202-emptydrop.R")
+source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/master/191211-hashing_workflow.R")
+source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/master/191209-QC_plots.R")
 set.seed(160396)
-.libPaths("/share/ClusterShare/software/contrib/jerven/R/3.6/")
 ###Start workflow by filtering out empty droplets using e.drop command
 raw_data_dirs <- paste0("R://Zilog-Cancer-TumourDevelopment/190510-HANSBRO1-SingleCellData/collection", c(1:6), "/RNA/output/outs/raw_feature_bc_matrix/")
 pro.name <- paste0("Collection", c(1:6))
@@ -74,19 +75,9 @@ seurat_merged <- CellCycleScoring(object = seurat_merged, s.features = s.genes, 
 
 #Save Seurat Object
 saveRDS(object = seurat_merged, file = paste0(seurat_dir, "/200221_ALL_merged_withSeed.RDS"))
-save_name <- "200221_ALL_merged_withSeed"
 
 #Make and save several Plots
-Melbow <- ElbowPlot(object = seurat_merged, ndims = 30)
-ggsave(filename = paste0(plot_dir, "/200221_ALL_merged_withSeed_ElbowPlot.pdf"), plot = Melbow, device = "pdf", width = 10, height = 10)
-MsampleID <- DimPlot(object = seurat_merged, group.by = "SampleID", label = T)
-ggsave(filename = paste0(plot_dir, "/200221_ALL_merged_withSeed_SampleID.pdf"), plot = MsampleID, device = "pdf", width = 10, height = 10)
-Morig.ident <- DimPlot(object = seurat_merged, group.by = "orig.ident", label = T)
-ggsave(filename = paste0(plot_dir, "/200221_ALL_merged_withSeed_OrigIdent.pdf"), plot = Morig.ident, device = "pdf", width = 10, height = 10)
-MCellCycle <- DimPlot(object = seurat_merged, group.by = "Phase", label = T)
-ggsave(filename = paste0(plot_dir, "/200221_ALL_merged_withSeed_CellCyclePhase.pdf"), plot = MCellCycle, device = "pdf", width = 10, height = 10)
-MpercentMT <- FeaturePlot(object = seurat_merged, features = "percent.mt")
-ggsave(filename = paste0(plot_dir, "/200221_ALL_merged_withSeed_PercentMT.pdf"), plot = MpercentMT, device = "pdf", width = 10, height = 10)
+plots_cluster(seurat.object = seurat_merged, save.name = "200221_ALL_merged_withSeed", dir = plot_dir)
 
 #Perform Seurat analysis again, but this time regress out percent.mt
 
@@ -107,18 +98,5 @@ seurat_regressed <- RunUMAP(seurat_regressed, dims = 1:20)
 #Save Regressed seurat output
 saveRDS(object = seurat_regressed, file = paste0(seurat_dir, "/200221_ALL_merged_MT_regressed_withSeed.RDS"))
 
-#Make and save several informative plots
-Nelbow <- ElbowPlot(object = seurat_regressed, ndims = 30)
-ggsave(filename = paste0(plot_dir, "/200221_ALL_merged_MT_regressed_withSeed_ElbowPlot.pdf"), plot = Nelbow, device = "pdf", width = 10, height = 10)
-NsampleID <- DimPlot(object = seurat_regressed, group.by = "SampleID", label = T)
-ggsave(filename = paste0(plot_dir, "/200221_ALL_merged_MT_regressed_withSeed_SampleID.pdf"), plot = NsampleID, device = "pdf", width = 10, height = 10)
-Norig.ident <- DimPlot(object = seurat_regressed, group.by = "orig.ident", label = T)
-ggsave(filename = paste0(plot_dir, "/200221_ALL_merged_MT_regressed_withSeed_OrigIdent.pdf"), plot = Norig.ident, device = "pdf", width = 10, height = 10)
-NCellCycle <- DimPlot(object = seurat_regressed, group.by = "Phase", label = T)
-ggsave(filename = paste0(plot_dir, "/200221_ALL_merged_MT_regressed_withSeed_CellCyclePhase.pdf"), plot = NCellCycle, device = "pdf", width = 10, height = 10)
-NpercentMT <- FeaturePlot(object = seurat_regressed, features = "percent.mt")
-ggsave(filename = paste0(plot_dir, "/200221_ALL_merged_MT_regressed_withSeed_PercentMT.pdf"), plot = NpercentMT, device = "pdf", width = 10, height = 10)
-Nres01 <- FeaturePlot(object = seurat_regressed, features = "RNA_snn_res.0.1")
-ggsave(filename = paste0(plot_dir, "/200221_ALL_merged_MT_regressed_withSeed_res01.pdf"), plot = Nres01, device = "pdf", width = 10, height = 10)
-Nres02 <- FeaturePlot(object = seurat_regressed, features = "RNA_snn_res.0.2")
-ggsave(filename = paste0(plot_dir, "/200221_ALL_merged_MT_regressed_withSeed_res02.pdf"), plot = Nres02, device = "pdf", width = 10, height = 10)
+#Make plots
+plots_cluster(seurat.object = seurat_regressed, save.name = "200221_ALL_merged_MT_regressed_withSeed", dir = plot_dir)

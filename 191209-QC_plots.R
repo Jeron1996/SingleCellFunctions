@@ -161,6 +161,9 @@ plots_cluster <- function(seurat.object, save.name, dir){
       percent.mt.vln <- VlnPlot(object=obj, features="percent.mt", pt.size=0.001) + ggtitle("Percentage mitochondrial genes per cluster")
       ggsave(filename = paste0(plot_dir, "/", sv.name, "_", res, "_PercentMT_VLN.pdf"), plot =   percent.mt.vln, device = "pdf", width = 10, height = 10)
     }
+
+    clustre <- clustree(x=seurat, prefix="RNA_snn_res.")
+    ggsave(filename = paste0(plot_dir, "/", sv.name, "_", res, "_Clustree.pdf"), plot = clustre, device = "pdf", width = 10, height = 10)
   }
 
 }

@@ -163,7 +163,7 @@ plots_cluster <- function(seurat.object, save.name, dir){
     }
 
     clustre <- clustree(x=seurat, prefix="RNA_snn_res.")
-    ggsave(filename = paste0(plot_dir, "/", sv.name, "_", res, "_Clustree.pdf"), plot = clustre, device = "pdf", width = 10, height = 10)
+    ggsave(filename = paste0(plot_dir, "/", sv.name, "_Clustree.pdf"), plot = clustre, device = "pdf", width = 10, height = 10)
   }
 
 }

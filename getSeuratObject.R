@@ -76,14 +76,14 @@ load("/share/ScratchGeneral/jerven/Hansbro_data/CellCylceGenes/cell.cyclegenes.r
 seurat_merged <- CellCycleScoring(object = seurat_merged, s.features = s.genes, g2m.features = g2m.genes, set.ident = FALSE)
 
 #Save Seurat Object
-saveRDS(object = seurat_merged, file = paste0(seurat_dir, "/200227_ALL_merged_normalized.RDS"))
+saveRDS(object = seurat_merged, file = paste0(seurat_dir, "200227_ALL_merged_normalized.RDS"))
 
 #Make and save several Plots
 plots_cluster(seurat.object = seurat_merged, save.name = "200227_ALL_merged_normalized", dir = plot_dir)
 
 #Perform Seurat analysis again, but this time regress out percent.mt
 
-seurat_regressed <- readRDS(file = paste0(seurat_dir, "/200227_ALL_merged_normalized.RDS"))
+seurat_regressed <- readRDS(file = paste0(seurat_dir, "200227_ALL_merged_normalized.RDS"))
 resolution <- c(0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1, 1.2, 1.4)
 seurat_regressed <- NormalizeData(seurat_regressed)
 seurat_regressed <- ScaleData(seurat_regressed, vars.to.regress = "percent.mt", features = rownames(seurat_regressed))

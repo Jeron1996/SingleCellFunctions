@@ -62,8 +62,8 @@ e.drop <- function(raw_matrix_counts, project.name, saveDir){
   counts.empty <- counts(data.empty)
   
   ##Create Seurat objects from new data matrix files
-  seurat.ok <- CreateSeuratObject(counts = counts.ok, project = as.character(project.name))
-  seurat.empty <- CreateSeuratObject(counts = counts.empty, project = as.character(project.name))
+  seurat.ok <- CreateSeuratObject(counts = counts.ok, project = as.character(project.name), min.cells = 3)
+  seurat.empty <- CreateSeuratObject(counts = counts.empty, project = as.character(project.name), min.cells = 3)
   
   #Calculate percentage mitochondrial genes
   seurat.ok[["percent.mt"]] <- PercentageFeatureSet(seurat.ok, pattern = "^mt-")

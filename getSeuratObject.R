@@ -59,6 +59,7 @@ for(hashing_file in hashing_files){
 
 #Merge all hashtag outputs
 seurat_merged <- merge(x = seurat_list[[1]], y = c(seurat_list[[2]], seurat_list[[3]], seurat_list[[4]], seurat_list[[5]], seurat_list[[6]]))
+seurat_merged <- seurat_merged[, seurat_merged$percent.mt < 10]
 seurat_dir <- "/share/ScratchGeneral/jerven/Hansbro_data/ReRun/SeuratObjects/"
 plot_dir <- "/share/ScratchGeneral/jerven/Hansbro_data/ReRun/Plots/"
 

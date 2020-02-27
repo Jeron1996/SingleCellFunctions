@@ -16,8 +16,8 @@ set.seed(160396)
 ###Start workflow by filtering out empty droplets using e.drop command
 raw_data_dirs <- paste0("R://Zilog-Cancer-TumourDevelopment/190510-HANSBRO1-SingleCellData/collection", c(1:6), "/RNA/output/outs/raw_feature_bc_matrix/")
 pro.name <- paste0("Collection", c(1:6))
-save.Dir <- paste0("G://Hansbro_data/ReRun/Emptydrop_Out/")
-save.Dir <- paste0("/share/ScratchGeneral/jerven/Hansbro_data/ReRun/Emptydrop_Out/")
+save.Dir <- paste0("G://Hansbro_data/ReRun_normalized/Emptydrop_Out/")
+save.Dir <- paste0("/share/ScratchGeneral/jerven/Hansbro_data/ReRun_normalized_normalized/Emptydrop_Out/")
 #Performs emptydrop for every collection
 for(dir in raw_data_dirs){
   name <- strsplit(x = dir, split = "/")[[1]][5]
@@ -26,13 +26,13 @@ for(dir in raw_data_dirs){
   saveRDS(object = e.drop_out, file = paste0(save.Dir, "/", name, "_e.drop_out.RDS"))
 }
 
-e.files <- list.files(path = "/share/ScratchGeneral/jerven/Hansbro_data/ReRun/Emptydrop_Out/" )[grepl(x = list.files(path = "/share/ScratchGeneral/jerven/Hansbro_data/ReRun/Emptydrop_Out/" ), pattern = "WithSeed.RDS", ignore.case = T)]
+e.files <- list.files(path = "/share/ScratchGeneral/jerven/Hansbro_data/ReRun_normalized_normalized/Emptydrop_Out/" )[grepl(x = list.files(path = "/share/ScratchGeneral/jerven/Hansbro_data/ReRun_normalized/Emptydrop_Out/" ), pattern = "_e.drop_out.RDS", ignore.case = T)]
 
 #Translation for hashtags, need for hashing_workflow
 hash <- c("A0303", "A0304", "A0305", "A0306", "A0307", "A0308")
 hash_trans <- as.character(c("Sal/SPG", "Ova 1", "Ova/DEX", 'Sal/Cmu', "Ova/Cmu", "Ova/Cmu/DEX"))
 hashing_translation <- data.frame(hash, hash_trans, stringsAsFactors = F)
-output_dir <- "/share/ScratchGeneral/jerven/Hansbro_data/ReRun/HashingOut/"
+output_dir <- "/share/ScratchGeneral/jerven/Hansbro_data/ReRun_normalized/HashingOut/"
 
 #Loops over all files of the emptydrop output and performs the hashing workflow to translate hashtags into samples and filter out droplets with double hashtags.
 for(file in e.files){
@@ -46,7 +46,7 @@ for(file in e.files){
 }
 
 seurat_list <- list()
-hashing_files <- list.files("/share/ScratchGeneral/jerven/Hansbro_data/ReRun/HashingOut/")[grepl(x = list.files("/share/ScratchGeneral/jerven/Hansbro_data/ReRun/HashingOut/"), pattern = "WithSeed.RDS")]
+hashing_files <- list.files("/share/ScratchGeneral/jerven/Hansbro_data/ReRun_normalized/HashingOut/")[grepl(x = list.files("/share/ScratchGeneral/jerven/Hansbro_data/ReRun_normalized/HashingOut/"), pattern = "WithSeed.RDS")]
 
 #create list with all hashing output files, to be used for merging
 for(hashing_file in hashing_files){
@@ -60,8 +60,8 @@ for(hashing_file in hashing_files){
 #Merge all hashtag outputs
 seurat_merged <- merge(x = seurat_list[[1]], y = c(seurat_list[[2]], seurat_list[[3]], seurat_list[[4]], seurat_list[[5]], seurat_list[[6]]))
 seurat_merged <- seurat_merged[, seurat_merged$percent.mt < 10]
-seurat_dir <- "/share/ScratchGeneral/jerven/Hansbro_data/ReRun/SeuratObjects/"
-plot_dir <- "/share/ScratchGeneral/jerven/Hansbro_data/ReRun/Plots/"
+seurat_dir <- "/share/ScratchGeneral/jerven/Hansbro_data/ReRun_normalized/SeuratObjects/"
+plot_dir <- "/share/ScratchGeneral/jerven/Hansbro_data/ReRun_normalized/Plots/"
 
 #Perform simple Seurat workflow, make plots that can be used for reference.
 seurat_merged <- NormalizeData(seurat_merged)
@@ -76,14 +76,14 @@ load("/share/ScratchGeneral/jerven/Hansbro_data/CellCylceGenes/cell.cyclegenes.r
 seurat_merged <- CellCycleScoring(object = seurat_merged, s.features = s.genes, g2m.features = g2m.genes, set.ident = FALSE)
 
 #Save Seurat Object
-saveRDS(object = seurat_merged, file = paste0(seurat_dir, "/200221_ALL_merged_withSeed.RDS"))
+saveRDS(object = seurat_merged, file = paste0(seurat_dir, "/200227_ALL_merged_normalized.RDS"))
 
 #Make and save several Plots
-plots_cluster(seurat.object = seurat_merged, save.name = "200221_ALL_merged_withSeed", dir = plot_dir)
+plots_cluster(seurat.object = seurat_merged, save.name = "200227_ALL_merged_normalized", dir = plot_dir)
 
 #Perform Seurat analysis again, but this time regress out percent.mt
 
-seurat_regressed <- readRDS(file = paste0(seurat_dir, "/200221_ALL_merged_withSeed.RDS"))
+seurat_regressed <- readRDS(file = paste0(seurat_dir, "/200227_ALL_merged_normalized.RDS"))
 resolution <- c(0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1, 1.2, 1.4)
 seurat_regressed <- NormalizeData(seurat_regressed)
 seurat_regressed <- ScaleData(seurat_regressed, vars.to.regress = "percent.mt", features = rownames(seurat_regressed))
@@ -92,7 +92,7 @@ load("/share/ScratchGeneral/jerven/Hansbro_data/CellCylceGenes/cell.cyclegenes.r
 seurat_regressed <- CellCycleScoring(object = seurat_regressed, s.features = s.genes, g2m.features = g2m.genes, set.ident = FALSE)
 seurat_regressed <- FindVariableFeatures(seurat_regressed)
 VariableFeatPlot <- VariableFeaturePlot(seurat_regressed)
-ggsave(plot=VariableFeatPlot, filename="/share/ScratchGeneral/jerven/Hansbro_data/ReRun/plots/200221_ALL_merged_MT_regressed_VariableFeaturePlot.pdf", width=10, height=10)
+ggsave(plot=VariableFeatPlot, filename="/share/ScratchGeneral/jerven/Hansbro_data/ReRun_normalized/plots/200227_ALL_merged_MT_regressed_VariableFeaturePlot.pdf", width=10, height=10)
 seurat_regressed <- RunPCA(seurat_regressed, features = VariableFeatures(object = seurat_regressed))
 seurat_regressed <- FindNeighbors(seurat_regressed, dims = 1:15)
 for(res in resolution){
@@ -101,7 +101,7 @@ for(res in resolution){
 seurat_regressed <- RunUMAP(seurat_regressed, dims = 1:15)
 
 #Save Regressed seurat output
-saveRDS(object = seurat_regressed, file = paste0(seurat_dir, "/200221_ALL_merged_MT_regressed_withSeed.RDS"))
+saveRDS(object = seurat_regressed, file = paste0(seurat_dir, "/200227_ALL_merged_MT_regressed_normalized.RDS"))
 
 #Make plots
-plots_cluster(seurat.object = seurat_regressed, save.name = "200221_ALL_merged_MT_regressed_withSeed", dir = plot_dir)
+plots_cluster(seurat.object = seurat_regressed, save.name = "200227_ALL_merged_MT_regressed_normalized", dir = plot_dir)

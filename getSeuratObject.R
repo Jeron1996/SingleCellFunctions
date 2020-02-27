@@ -68,8 +68,8 @@ seurat_merged <- FindVariableFeatures(seurat_merged)
 seurat_merged <- ScaleData(object = seurat_merged, features = rownames(seurat_merged))
 seurat_merged <- RunPCA(seurat_merged, features = VariableFeatures(object = seurat_merged))
 #Use first 20 dimensions for UMAP
-seurat_merged <- FindNeighbors(seurat_merged, dims = 1:20)
-seurat_merged <- RunUMAP(seurat_merged, dims = 1:20)
+seurat_merged <- FindNeighbors(seurat_merged, dims = 1:15)
+seurat_merged <- RunUMAP(seurat_merged, dims = 1:15)
 #Add Cell cycle information to the Seurat Object
 load("/share/ScratchGeneral/jerven/Hansbro_data/CellCylceGenes/cell.cyclegenes.rdata")
 seurat_merged <- CellCycleScoring(object = seurat_merged, s.features = s.genes, g2m.features = g2m.genes, set.ident = FALSE)
@@ -89,12 +89,14 @@ seurat_regressed <- ScaleData(seurat_regressed, vars.to.regress = "percent.mt", 
 load("/share/ScratchGeneral/jerven/Hansbro_data/CellCylceGenes/cell.cyclegenes.rdata")
 seurat_regressed <- CellCycleScoring(object = seurat_regressed, s.features = s.genes, g2m.features = g2m.genes, set.ident = FALSE)
 seurat_regressed <- FindVariableFeatures(seurat_regressed)
+VariableFeatPlot <- VariableFeaturePlot(seurat_regressed)
+ggsave(plot=VariableFeatPlot, filename="/share/ScratchGeneral/jerven/Hansbro_data/ReRun/plots/200221_ALL_merged_MT_regressed_VariableFeaturePlot.pdf", width=10, height=10)
 seurat_regressed <- RunPCA(seurat_regressed, features = VariableFeatures(object = seurat_regressed))
-seurat_regressed <- FindNeighbors(seurat_regressed, dims = 1:20)
+seurat_regressed <- FindNeighbors(seurat_regressed, dims = 1:15)
 for(res in resolution){
   seurat_regressed <- FindClusters(seurat_regressed, resolution = res)
 }
-seurat_regressed <- RunUMAP(seurat_regressed, dims = 1:20)
+seurat_regressed <- RunUMAP(seurat_regressed, dims = 1:15)
 
 #Save Regressed seurat output
 saveRDS(object = seurat_regressed, file = paste0(seurat_dir, "/200221_ALL_merged_MT_regressed_withSeed.RDS"))

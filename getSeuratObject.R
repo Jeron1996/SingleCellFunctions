@@ -64,6 +64,7 @@ seurat_dir <- "/share/ScratchGeneral/jerven/Hansbro_data/ReRun/SeuratObjects/"
 plot_dir <- "/share/ScratchGeneral/jerven/Hansbro_data/ReRun/Plots/"
 
 #Perform simple Seurat workflow, make plots that can be used for reference.
+seurat_merged <- NormalizeData(seurat_merged)
 seurat_merged <- FindVariableFeatures(seurat_merged)
 seurat_merged <- ScaleData(object = seurat_merged, features = rownames(seurat_merged))
 seurat_merged <- RunPCA(seurat_merged, features = VariableFeatures(object = seurat_merged))
@@ -84,6 +85,7 @@ plots_cluster(seurat.object = seurat_merged, save.name = "200221_ALL_merged_with
 
 seurat_regressed <- readRDS(file = paste0(seurat_dir, "/200221_ALL_merged_withSeed.RDS"))
 resolution <- c(0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1, 1.2, 1.4)
+seurat_regressed <- NormalizeData(seurat_regressed)
 seurat_regressed <- ScaleData(seurat_regressed, vars.to.regress = "percent.mt", features = rownames(seurat_regressed))
 #Add Cell cycle information to the Seurat Object
 load("/share/ScratchGeneral/jerven/Hansbro_data/CellCylceGenes/cell.cyclegenes.rdata")

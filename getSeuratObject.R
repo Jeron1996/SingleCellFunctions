@@ -92,7 +92,7 @@ load("/share/ScratchGeneral/jerven/Hansbro_data/CellCylceGenes/cell.cyclegenes.r
 seurat_regressed <- CellCycleScoring(object = seurat_regressed, s.features = s.genes, g2m.features = g2m.genes, set.ident = FALSE)
 seurat_regressed <- FindVariableFeatures(seurat_regressed)
 VariableFeatPlot <- VariableFeaturePlot(seurat_regressed)
-ggsave(plot=VariableFeatPlot, filename="/share/ScratchGeneral/jerven/Hansbro_data/ReRun_normalized/plots/200227_ALL_merged_MT_regressed_VariableFeaturePlot.pdf", width=10, height=10)
+ggsave(plot=VariableFeatPlot, filename="/share/ScratchGeneral/jerven/Hansbro_data/ReRun_normalized/Plots/200227_ALL_merged_MT_regressed_VariableFeaturePlot.pdf", width=10, height=10)
 seurat_regressed <- RunPCA(seurat_regressed, features = VariableFeatures(object = seurat_regressed))
 seurat_regressed <- FindNeighbors(seurat_regressed, dims = 1:15)
 for(res in resolution){

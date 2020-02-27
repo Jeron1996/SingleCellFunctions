@@ -16,7 +16,7 @@ cell_hashing_workflow <- function(plotting = TRUE, pos.quart = 0.99, seurat.obj.
   rownaam <- rownames(UMI)
   rownaam <- rownaam[-length(rownaam)]
   
-  UMI <- CreateSeuratObject(counts = UMI, project = "Hashing.test", assay = "RNA")
+  UMI <- CreateSeuratObject(counts = UMI, project = pro.name, assay = "RNA")
   UMI <- UMI[rownaam,]
   VlnPlot(UMI, features = c("nCount_RNA"), pt.size = 0.1)
   
@@ -25,7 +25,7 @@ cell_hashing_workflow <- function(plotting = TRUE, pos.quart = 0.99, seurat.obj.
   rownames(HTO) <- substr(x = rownames(HTO), start = 1, stop = 5)
   df.hto <- as.data.frame(HTO)    ## needed for summary statistic
   
-  HTO <- CreateSeuratObject(counts = HTO, project = "Hashing.test", assay = "RNA")
+  HTO <- CreateSeuratObject(counts = HTO, project = pro.name, assay = "RNA")
   HTO <- HTO[rownaam, ]
   VlnPlot(HTO, features = c("nCount_RNA"), pt.size = 0.1)
   

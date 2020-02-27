@@ -17,7 +17,7 @@ set.seed(160396)
 raw_data_dirs <- paste0("R://Zilog-Cancer-TumourDevelopment/190510-HANSBRO1-SingleCellData/collection", c(1:6), "/RNA/output/outs/raw_feature_bc_matrix/")
 pro.name <- paste0("Collection", c(1:6))
 save.Dir <- paste0("G://Hansbro_data/ReRun_normalized/Emptydrop_Out/")
-save.Dir <- paste0("/share/ScratchGeneral/jerven/Hansbro_data/ReRun_normalized_normalized/Emptydrop_Out/")
+save.Dir <- paste0("/share/ScratchGeneral/jerven/Hansbro_data/ReRun_normalized/Emptydrop_Out/")
 #Performs emptydrop for every collection
 for(dir in raw_data_dirs){
   name <- strsplit(x = dir, split = "/")[[1]][5]

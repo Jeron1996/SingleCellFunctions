@@ -62,6 +62,7 @@ seurat_merged <- merge(x = seurat_list[[1]], y = c(seurat_list[[2]], seurat_list
 seurat_merged <- seurat_merged[, seurat_merged$percent.mt < 10]
 seurat_dir <- "/share/ScratchGeneral/jerven/Hansbro_data/ReRun_normalized/SeuratObjects/"
 plot_dir <- "/share/ScratchGeneral/jerven/Hansbro_data/ReRun_normalized/Plots/"
+resolution <- c(0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1, 1.2, 1.4)
 
 #Perform simple Seurat workflow, make plots that can be used for reference.
 seurat_merged <- NormalizeData(seurat_merged)
@@ -70,6 +71,9 @@ seurat_merged <- ScaleData(object = seurat_merged, features = rownames(seurat_me
 seurat_merged <- RunPCA(seurat_merged, features = VariableFeatures(object = seurat_merged))
 #Use first 20 dimensions for UMAP
 seurat_merged <- FindNeighbors(seurat_merged, dims = 1:15)
+for(res in resolution){
+  seurat_merged <- FindClusters(seurat_merged, resolution = res)
+}
 seurat_merged <- RunUMAP(seurat_merged, dims = 1:15)
 #Add Cell cycle information to the Seurat Object
 load("/share/ScratchGeneral/jerven/Hansbro_data/CellCylceGenes/cell.cyclegenes.rdata")
@@ -84,8 +88,6 @@ plots_cluster(seurat.object = seurat_merged, save.name = "200227_ALL_merged_norm
 #Perform Seurat analysis again, but this time regress out percent.mt
 
 seurat_regressed <- readRDS(file = paste0(seurat_dir, "200227_ALL_merged_normalized.RDS"))
-resolution <- c(0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1, 1.2, 1.4)
-seurat_regressed <- NormalizeData(seurat_regressed)
 seurat_regressed <- ScaleData(seurat_regressed, vars.to.regress = "percent.mt", features = rownames(seurat_regressed))
 #Add Cell cycle information to the Seurat Object
 load("/share/ScratchGeneral/jerven/Hansbro_data/CellCylceGenes/cell.cyclegenes.rdata")

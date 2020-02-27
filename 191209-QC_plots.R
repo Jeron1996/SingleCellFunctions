@@ -141,7 +141,6 @@ plots_cluster <- function(seurat.object, save.name, dir){
   ggsave(filename = paste0(plot_dir, "/", sv.name, "_PercentMT.pdf"), plot = NpercentMT, device = "pdf", width = 10, height = 10)
 
   ## Plot DimPlots for all resolutions
-  Idents(obj) <- as.character(resolution)
   resolution <- names(obj@meta.data)
   resolution <- resolution[grepl(pattern = "res.", x = resolution)]
 

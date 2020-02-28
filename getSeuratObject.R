@@ -26,7 +26,7 @@ dir.path <- paste0("/share/ScratchGeneral/jerven/Hansbro_data/Analysis/", Projec
 sapply(dir.path, function(X) dir.create(path = X, recursive = T))
 
 ##Directories and variables needed
-raw_data_dirs <- paste0("/share/ScratchGeneral/jerven/Hansbro_data/Data/Data/collection", c(1:6), "raw_feature_bc_matrix")
+raw_data_dirs <- paste0("/share/ScratchGeneral/jerven/Hansbro_data/Data/Data/collection", c(1:6), "/raw_feature_bc_matrix")
 pro.name <- paste0("Collection", c(1:6))
 emptydrop.dir <- dir.path[1]
 hashing.dir <- dir.path[2]

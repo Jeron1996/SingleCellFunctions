@@ -36,7 +36,7 @@ seurat_dir <- dir.path[4]
 ###Start workflow by filtering out empty droplets using e.drop command
 #Performs emptydrop for every collection
 for(dir in raw_data_dirs){
-  name <- strsplit(x = dir, split = "/")[[1]][5]
+  name <- strsplit(x = dir, split = "/")[[1]][8]
   raw <- read10xCounts(samples = dir, col.names = T)
   e.drop_out <- e.drop(raw_matrix_counts = raw, project.name = name, saveDir = emptydrop.dir)
   saveRDS(object = e.drop_out, file = paste0(emptydrop.dir, "/", name, "_e.drop_out.RDS"))

@@ -6,7 +6,7 @@ library(dplyr)
 library(Matrix)
 library(stringr)
 
-cell_hashing_workflow <- function(plotting = TRUE, pos.quart = 0.95, seurat.obj.emptydrop, saveDir, umi_dir, hto_dir, pro.name, hash_translation){
+cell_hashing_workflow <- function(plotting = TRUE, pos.quart = 0.995, seurat.obj.emptydrop, saveDir, umi_dir, hto_dir, pro.name, hash_translation){
   set.seed(160396)
   print(umi_dir)
   print(hto_dir)

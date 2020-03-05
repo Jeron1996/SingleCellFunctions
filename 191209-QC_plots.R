@@ -52,8 +52,8 @@ QC_plots_emptydrop <- function(seuratObj.ok, seuratObj.empty, low = low, pro.nam
 
   ##Histogram showing the p-value distribution. Should be uniform
 
-  emptydrop_hist_filt <- hist(e.out$PValue[e.out$Total >= 100], breaks = 20, xlab="P-value", main = "", col="grey80")
-  emptydrop_hist <- hist(e.out$PValue, breaks = 20, xlab="P-value", main = "", col="grey80")
+  emptydrop_hist_filt <- hist(eOut$PValue[eOut$Total >= 100], breaks = 20, xlab="P-value", main = "", col="grey80")
+  emptydrop_hist <- hist(eOut$PValue, breaks = 20, xlab="P-value", main = "", col="grey80")
 
   ### Save plots in single PDF file
   pdf.name <- paste0(saveDir, "/", pro.name,"_lower-", low, "_FDR-", FDR, "_emptydrop_QC.pdf")

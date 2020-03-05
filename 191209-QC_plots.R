@@ -9,7 +9,7 @@ library(clustree)
 ####################################################QC plots emptydrop workflow####################################################
 ###################################################################################################################################
 
-QC_plots_emptydrop <- function(seuratObj.ok, seuratObj.empty, low = low, pro.name, FDR, saveDir){
+QC_plots_emptydrop <- function(seuratObj.ok, seuratObj.empty, low = low, pro.name, FDR, saveDir, eOut){
 
   ##Format Seurat Objects & Calculate percent mt
   seuratObj.ok$orig.ident <- "Ok"
@@ -50,10 +50,16 @@ QC_plots_emptydrop <- function(seuratObj.ok, seuratObj.empty, low = low, pro.nam
   ### Make ViolinPlot comparing mitochondrial gene percentage
   Vln_mt <- VlnPlot(object = seurat.combine, features = "percent.mt", split.by = "orig.ident", pt.size = 0)
 
+  ##Histogram showing the p-value distribution. Should be uniform
+
+  emptydrop_hist_filt <- hist(e.out$PValue[e.out$Total >= 100], breaks = 20, xlab="P-value", main = "", col="grey80"
+  emptydrop_hist <- hist(e.out$PValue, breaks = 20, xlab="P-value", main = "", col="grey80"
 
   ### Save plots in single PDF file
   pdf.name <- paste0(saveDir, "/", pro.name,"_lower-", low, "_FDR-", FDR, "_emptydrop_QC.pdf")
   pdf(file = pdf.name)
+  plot(emptydrop_hist_filt)
+  plot(emptydrop_hist)
   plot(box_feat)
   plot(box_count)
   plot(Vln_mt)

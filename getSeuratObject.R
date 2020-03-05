@@ -14,10 +14,15 @@ source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/mast
 source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/master/191209-QC_plots.R")
 set.seed(160396)
 
+##Choose normalization method
+norm.methods <- c("SCTransform", "log-transform", "none")
+norm.method <- norm.methods[1]
+print(paste0("Normalization method: ", norm.method))
+
 ##Create a new output directory for this analysis run
 date <- Sys.Date()
 date <- format(date, "%y%m%d")
-ProjectTitle <- "ALL_FeatFiltered"
+ProjectTitle <- "ALL_FeatFiltered_SCT"
 ProjectName <- paste0(date, "_", ProjectTitle)
 if(dir.exists(paste0("/share/ScratchGeneral/jerven/Hansbro_data/Analysis/", ProjectName))){
   stop("Directory belonging to this ProjectName already exists. \n  Please choose another ProjectName")
@@ -76,19 +81,31 @@ for(hashing_file in hashing_files){
 seurat_merged <- merge(x = seurat_list[[1]], y = c(seurat_list[[2]], seurat_list[[3]], seurat_list[[4]], seurat_list[[5]], seurat_list[[6]]))
 seurat_merged <- seurat_merged[, seurat_merged$percent.mt < 10]
 
-#Perform simple Seurat workflow, make plots that can be used for reference.
-seurat_merged <- FindVariableFeatures(seurat_merged)
-seurat_merged <- ScaleData(object = seurat_merged, features = rownames(seurat_merged))
-seurat_merged <- RunPCA(seurat_merged, features = VariableFeatures(object = seurat_merged))
-#Use first 20 dimensions for UMAP
-seurat_merged <- FindNeighbors(seurat_merged, dims = 1:15)
+##Choose which normalization method to perform on the merged data.
+if(norm.method == "SCTransform"){ #Perform SCTransform normalization
+  seurat_merged <- SCTransform(object = seurat_merged, verbose = TRUE)
+}else if(norm.method == "log-transform"){ #Perform log normalization
+  seurat_merged <- NormalizeData(seurat_merged)
+  seurat_merged <- FindVariableFeatures(seurat_merged)
+  seurat_merged <- ScaleData(object = seurat_merged, features = rownames(seurat_merged))
+}else if(norm.method == "none"){ #Perform NO normalization, not advised
+  seurat_merged <- FindVariableFeatures(seurat_merged)
+  seurat_merged <- ScaleData(object = seurat_merged, features = rownames(seurat_merged))
+}else{
+  print("No normalization method chosen")
+}
+
+#RunPCA using standard values
+seurat_merged <- RunPCA(seurat_merged)
+#Use first 25 dimensions for UMAP
+seurat_merged <- FindNeighbors(seurat_merged, dims = 1:25)
 
 resolution <- c(0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1, 1.2, 1.4)
 for(res in resolution){
   seurat_merged <- FindClusters(seurat_merged, resolution = res)
 }
 
-seurat_merged <- RunUMAP(seurat_merged, dims = 1:15)
+seurat_merged <- RunUMAP(seurat_merged, dims = 1:25)
 #Add Cell cycle information to the Seurat Object
 load("/share/ScratchGeneral/jerven/Hansbro_data/CellCylceGenes/cell.cyclegenes.rdata")
 seurat_merged <- CellCycleScoring(object = seurat_merged, s.features = s.genes, g2m.features = g2m.genes, set.ident = FALSE)
@@ -111,19 +128,30 @@ for(re in resol){
 #Perform Seurat analysis again, but this time regress out percent.mt
 
 seurat_regressed <- readRDS(file = paste0(seurat_dir, "/", ProjectName, ".RDS"))
-seurat_regressed <- ScaleData(seurat_regressed, vars.to.regress = "percent.mt", features = rownames(seurat_regressed))
+
+##Choose which normalization method to perform on the merged data.
+if(norm.method == "SCTransform"){ #Perform SCTransform normalization
+  seurat_regressed <- SCTransform(object = seurat_regressed, vars.to.regress = "percent.mt", verbose = TRUE)
+}else if(norm.method == "log-transform"){ #Perform log normalization
+  seurat_regressed <- NormalizeData(seurat_regressed)
+  seurat_regressed <- FindVariableFeatures(seurat_regressed)
+  seurat_regressed <- ScaleData(object = seurat_regressed, features = rownames(seurat_regressed))
+}else if(norm.method == "none"){ #Perform NO normalization, not advised
+  seurat_regressed <- FindVariableFeatures(seurat_regressed)
+  seurat_regressed <- ScaleData(object = seurat_regressed, features = rownames(seurat_regressed))
+}else{
+  print("No normalization method chosen")
+}
+
 #Add Cell cycle information to the Seurat Object
 load("/share/ScratchGeneral/jerven/Hansbro_data/CellCylceGenes/cell.cyclegenes.rdata")
 seurat_regressed <- CellCycleScoring(object = seurat_regressed, s.features = s.genes, g2m.features = g2m.genes, set.ident = FALSE)
-seurat_regressed <- FindVariableFeatures(seurat_regressed)
-VariableFeatPlot <- VariableFeaturePlot(seurat_regressed)
-ggsave(plot=VariableFeatPlot, filename=paste0(plot_dir, "/", ProjectName, "MT_regressed_VariableFeaturePlot.pdf"), width=10, height=10)
-seurat_regressed <- RunPCA(seurat_regressed, features = VariableFeatures(object = seurat_regressed))
-seurat_regressed <- FindNeighbors(seurat_regressed, dims = 1:15)
+seurat_regressed <- RunPCA(seurat_regressed)
+seurat_regressed <- FindNeighbors(seurat_regressed, dims = 1:25)
 for(res in resolution){
   seurat_regressed <- FindClusters(seurat_regressed, resolution = res)
 }
-seurat_regressed <- RunUMAP(seurat_regressed, dims = 1:15)
+seurat_regressed <- RunUMAP(seurat_regressed, dims = 1:25)
 
 #Save Regressed seurat output
 saveRDS(object = seurat_regressed, file = paste0(seurat_dir, "/", ProjectName, "_MT_regressed.RDS"))
@@ -136,6 +164,6 @@ resol_regressed <- seurat_regressed@meta.data
 resol_regressed <- resol_regressed[grepl(pattern = "res.", x=resol_regressed)]
 for(re_regressed in resol_regressed){
   Idents(seurat_regressed) <- re_regressed
-  markers <- FindAllMarkers(object = seurat_merged, assay = "RNA", logfc.threshold = 0.25)
+  markers <- FindAllMarkers(object = seurat_regressed, assay = "RNA", logfc.threshold = 0.25)
   saveRDS(object = markers, file=paste0(seurat_dir, "/", re_regressed, "MT_regressed_markers.RDS"))
 }

@@ -51,9 +51,9 @@ QC_plots_emptydrop <- function(seuratObj.ok, seuratObj.empty, low = low, pro.nam
   Vln_mt <- VlnPlot(object = seurat.combine, features = "percent.mt", split.by = "orig.ident", pt.size = 0)
 
   ##Histogram showing the p-value distribution. Should be uniform
-  e.out <- e.out
-  emptydrop_hist_filt <- hist(e.out$PValue[e.out$Total >= 100], breaks = 20, xlab="P-value", main = "", col="grey80"
-  emptydrop_hist <- hist(e.out$PValue, breaks = 20, xlab="P-value", main = "", col="grey80"
+  
+  emptydrop_hist_filt <- hist(e.out$PValue[e.out$Total >= 100], breaks = 20, xlab="P-value", main = "", col="grey80")
+  emptydrop_hist <- hist(e.out$PValue, breaks = 20, xlab="P-value", main = "", col="grey80")
 
   ### Save plots in single PDF file
   pdf.name <- paste0(saveDir, "/", pro.name,"_lower-", low, "_FDR-", FDR, "_emptydrop_QC.pdf")

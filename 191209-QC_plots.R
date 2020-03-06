@@ -167,7 +167,7 @@ plots_cluster <- function(seurat.object, save.name, dir){
       ggsave(filename = paste0(plot_dir, "/", sv.name, "_", res, "_PercentMT_VLN.pdf"), plot =   percent.mt.vln, device = "pdf", width = 10, height = 10)
     }
 
-    clustre <- clustree(x=obj, prefix="RNA_snn_res.")
+    clustre <- clustree(x=obj, prefix="SCT_snn_res.")
     ggsave(filename = paste0(plot_dir, "/", sv.name, "_Clustree.pdf"), plot = clustre, device = "pdf", width = 10, height = 10)
   }
 

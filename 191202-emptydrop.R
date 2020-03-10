@@ -32,7 +32,7 @@ e.drop <- function(raw_matrix_counts, project.name, saveDir){
 
   ## Run emptyDrops()
   print("This is going to take a while")
-  e.out <- emptyDrops(m = mycounts.detect, lower = 80, ignore = 1)
+  e.out <- emptyDrops(m = mycounts.detect, lower = 100)
   print("This took a while")
   print(e.out)
 

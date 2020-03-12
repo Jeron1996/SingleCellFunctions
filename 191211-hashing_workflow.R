@@ -14,20 +14,6 @@ cell_hashing_workflow <- function(plotting = TRUE, pos.quart = 0.99, seurat.obj.
   UMI <- CreateSeuratObject(counts = UMI, project = pro.name, assay = "HTO")
   UMI <- UMI[rownames(UMI)[rownames(UMI) != "unmap"],]
 
-  ##Creates HTO SeuratObject from HTO count matrix and formats it
-  df.umi <- as.data.frame(UMI@assay$HTO@counts)    ## needed for summary statistic
-
-  #Create summay for HTO matrix which shows distribution of RNA reads for the different hashtags
-  r <- rownames(df.umi)
-  df <- as.data.frame(matrix(ncol = 0, nrow = ncol(df.umi)))
-  for (i in 1:nrow(df.umi)){
-    df.temp <- as.data.frame(matrix(ncol = 1, nrow = ncol(df.umi)))
-    df.temp[,1] <- as.numeric(df.umi[i, ])
-    colnames(df.temp) <- r[i]
-    df <- cbind(df, df.temp)
-  }
-
-
   ##filter empty droplets based on e.drops output
   ok.barcodes <- colnames(seurat.obj.emptydrop)
   ok.barcodes.clean <- str_remove(string = ok.barcodes, pattern = "-1")

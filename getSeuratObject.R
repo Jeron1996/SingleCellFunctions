@@ -9,9 +9,9 @@ library(DropletUtils)
 library(dplyr)
 library(Matrix)
 library(devtools)
-source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/Normalization/191202-emptydrop.R")
-source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/Normalization/191211-hashing_workflow.R")
-source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/Normalization/191209-QC_plots.R")
+source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/UpdatedHashing/191202-emptydrop.R")
+source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/UpdatedHashing/191211-hashing_workflow.R")
+source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/UpdatedHashing/191209-QC_plots.R")
 set.seed(160396)
 
 ##Choose normalization method
@@ -59,8 +59,7 @@ for(file in e.files){
   e.out <- readRDS(file = paste0(emptydrop.dir, "/", file))
   projectName <- strsplit(x = file, split = "_")[[1]][1]
   umi_directory <- paste0("/share/ScratchGeneral/jerven/Hansbro_data/Data/", projectName, "_output/umi_count/")
-  hto_directory <- paste0("/share/ScratchGeneral/jerven/Hansbro_data/Data/", projectName, "_output/read_count/")
-  hashtag_output <- cell_hashing_workflow(seurat.obj.emptydrop = e.out, plotting = TRUE, saveDir = hashing.dir, umi_dir = umi_directory, hto_dir = hto_directory, pro.name = projectName, hash_translation = hashing_translation)
+  hashtag_output <- cell_hashing_workflow(seurat.obj.emptydrop = e.out, plotting = TRUE, saveDir = hashing.dir, umi_dir = umi_directory, pro.name = projectName, hash_translation = hashing_translation)
   hashtag_output@project.name <- projectName
   saveRDS(object = hashtag_output, file = paste0(hashing.dir, "/", projectName, "_hashingOutWithSeed.RDS"))
 }

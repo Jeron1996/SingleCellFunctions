@@ -88,7 +88,7 @@ QC_plots_hashing <- function(hashtag = hashtag, pos.quart = pos.quart, saveDir, 
   #Idents(hashtag) <- "HTO_maxID"
 
   ##make ridge plot for to show expression of each hashtag
-  ridge.plot <- RidgePlot(hashtag, assay = "RNA", features = rownames(hashtag[["RNA"]]), ncol = 2)
+  ridge.plot <- RidgePlot(hashtag, assay = "HTO", features = rownames(hashtag[["HTO"]]), ncol = 2)
 
   ##make heatmap of expression values
   heatmap.hashtag <- HTOHeatmap(hashtag, assay = "HTO", ncells = 5000)

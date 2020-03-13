@@ -45,7 +45,7 @@ cell_hashing_workflow <- function(plotting = TRUE, pos.quart = 0.99, seurat.obj.
   hashtag_all <- NormalizeData(object = hashtag_all, assay = "HTO", normalization.method = "CLR", verbose = FALSE)
   hashtag_all <- HTODemux(hashtag_all, assay = "HTO", positive.quantile = pos.quart)
   saveRDS(object=hashtag_all, file = paste0(hashing.dir, "/", projectName, "_hashingNoEmpty.RDS"))
-  
+
   ##create QC plots, if desired
   if(plotting){
     saveDir <- saveDir
@@ -71,7 +71,6 @@ cell_hashing_workflow <- function(plotting = TRUE, pos.quart = 0.99, seurat.obj.
   seurat.obj.emptydrop <- AddMetaData(object = seurat.obj.emptydrop, metadata = hashtag@meta.data, col.name = c(colnames(hashtag@meta.data)))
 
   ##Return only singlets & translate hashtags
-  seurat.obj.emptydrop <- subset(x = seurat.obj.emptydrop, subset = HTO_classification.global %in% "Singlet")
   seurat.obj.emptydrop$SampleID <- NA
   for(i in hash_translation$hash){
     seurat.obj.emptydrop$SampleID[seurat.obj.emptydrop$HTO_classification %in% i] <- hash_translation[hash_translation$hash %in% i, "hash_trans"]

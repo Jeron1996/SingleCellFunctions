@@ -9,9 +9,9 @@ library(DropletUtils)
 library(dplyr)
 library(Matrix)
 library(devtools)
-source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/UpdatedHashing/191202-emptydrop.R")
-source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/UpdatedHashing/191211-hashing_workflow.R")
-source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/UpdatedHashing/191209-QC_plots.R")
+source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/NohashFilter/191202-emptydrop.R")
+source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/NohashFilter/191211-hashing_workflow.R")
+source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/NohashFilter/191209-QC_plots.R")
 set.seed(160396)
 
 ##Choose normalization method
@@ -33,7 +33,7 @@ sapply(dir.path, function(X) dir.create(path = X, recursive = T))
 ##Directories and variables needed
 raw_data_dirs <- paste0("/share/ScratchGeneral/jerven/Hansbro_data/Data/RNA/collection", c(1:6), "/raw_feature_bc_matrix")
 pro.name <- paste0("Collection", c(1:6))
-emptydrop.dir <- dir.path[1]
+emptydrop.dir <- "/share/ScratchGeneral/jerven/Hansbro_data/Analysis/200312_HashingNew/Emptydrop_Out/"
 hashing.dir <- dir.path[2]
 plot_dir <- dir.path[3]
 seurat_dir <- dir.path[4]
@@ -42,9 +42,6 @@ seurat_dir <- dir.path[4]
 #Performs emptydrop for every collection
 for(dir in raw_data_dirs){
   name <- strsplit(x = dir, split = "/")[[1]][8]
-  raw <- read10xCounts(samples = dir, col.names = T)
-  e.drop_out <- e.drop(raw_matrix_counts = raw, project.name = name, saveDir = emptydrop.dir)
-  saveRDS(object = e.drop_out, file = paste0(emptydrop.dir, "/", name, "_e.drop_out.RDS"))
 }
 
 e.files <- list.files(path = emptydrop.dir)[grepl(x = list.files(path = emptydrop.dir), pattern = "_e.drop_out.RDS", ignore.case = T)]

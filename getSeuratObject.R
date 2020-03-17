@@ -1,4 +1,4 @@
-## Commands to get NonNormalized, percent.mt regressed out Seurat Object for the Hansbro collaboration
+## Commands to get SCT normalized, percent.mt regressed out Seurat Object for the Hansbro collaboration
 .libPaths("/share/ClusterShare/software/contrib/jerven/R/3.6/")
 library(ggforce)
 library(Seurat)

@@ -79,44 +79,6 @@ for(hashing_file in hashing_files){
   seurat_list <- append(value=seurat.obj.emptydrop, x=seurat_list)
 }
 
-
-
-
-
-e.files <- list.files(path = emptydrop.dir)[grepl(x = list.files(path = emptydrop.dir), pattern = "_e.drop_out.RDS", ignore.case = T)]
-
-#Translation for hashtags, need for hashing_workflow
-hash <- c("A0303", "A0304", "A0305", "A0306", "A0307", "A0308")
-hash_trans <- as.character(c("Sal/SPG", "Ova 1", "Ova/DEX", 'Sal/Cmu', "Ova/Cmu", "Ova/Cmu/DEX"))
-hashing_translation <- data.frame(hash, hash_trans, stringsAsFactors = F)
-
-#Loops over all files of the emptydrop output and performs the hashing workflow to translate hashtags into samples and filter out droplets with double hashtags.
-for(file in e.files){
-  e.out <- readRDS(file = paste0(emptydrop.dir, "/", file))
-  projectName <- strsplit(x = file, split = "_")[[1]][1]
-  umi_directory <- paste0("/share/ScratchGeneral/jerven/Hansbro_data/Data/", projectName, "_output/umi_count/")
-  hashtag_output <- cell_hashing_workflow(seurat.obj.emptydrop = e.out, plotting = TRUE, saveDir = hashing.dir, umi_dir = umi_directory, pro.name = projectName, hash_translation = hashing_translation)
-  hashtag_output@project.name <- projectName
-  saveRDS(object = hashtag_output, file = paste0(hashing.dir, "/", projectName, "_hashingOut.RDS"))
-}
-
-seurat_list <- list()
-empty_files <- list.files(emptydrop.dir)[grepl(x = list.files(emptydrop.dir), pattern = "_e.drop_out.RDS")]
-
-#create list with all hashing output files, to be used for merging
-for(empty_file in empty_files){
-  cell_prefix <- strsplit(x = empty_file, split = "_")[[1]][1]
-  cell_prefix <- strsplit(x = cell_prefix, split = "collection")[[1]][2]
-  seurat.obj.emptydrop <- readRDS(file = paste0(emptydrop.dir, "/", empty_file))
-  seurat.obj.emptydrop <- RenameCells(object = seurat.obj.emptydrop, add.cell.id = paste0("c", cell_prefix))
-  seurat_list <- append(value=seurat.obj.emptydrop, x=seurat_list)
-}
-
-
-
-
-
-
 #Merge all hashtag outputs
 seurat_merged <- merge(x = seurat_list[[1]], y = c(seurat_list[[2]], seurat_list[[3]], seurat_list[[4]], seurat_list[[5]], seurat_list[[6]]))
 seurat_merged <- seurat_merged[, seurat_merged$percent.mt < 10]
@@ -204,6 +166,6 @@ resol_regressed <- seurat_regressed@meta.data
 resol_regressed <- resol_regressed[grepl(pattern = "res.", x=resol_regressed)]
 for(re_regressed in resol_regressed){
   Idents(seurat_regressed) <- re_regressed
-  markers <- FindAllMarkers(object = seurat_regressed, assay = "RNA", logfc.threshold = 0.25)
+  markers <- FindAllMarkers(object = seurat_regressed, assay = "SCT", slot = "data", logfc.threshold = 0.25)
   saveRDS(object = markers, file=paste0(de_dir, "/", re_regressed, "MT_regressed_markers.RDS"))
 }

@@ -9,15 +9,10 @@ library(DropletUtils)
 library(dplyr)
 library(Matrix)
 library(devtools)
-<<<<<<< Updated upstream
 source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/master/191202-emptydrop.R")
 source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/master/191211-hashing_workflow.R")
 source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/master/191209-QC_plots.R")
-=======
-source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/swithMergeHash/191202-emptydrop.R")
-source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/swithMergeHash/191211-hashing_workflow.R")
-source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/swithMergeHash/191209-QC_plots.R")
->>>>>>> Stashed changes
+
 set.seed(160396)
 
 ##Choose normalization method

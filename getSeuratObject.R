@@ -23,7 +23,7 @@ print(paste0("Normalization method: ", norm.method))
 ##Create a new output directory for this analysis run
 date <- Sys.Date()
 date <- format(date, "%y%m%d")
-ProjectTitle <- "SCT_retain_ALL"
+ProjectTitle <- "Updated_USE"
 ProjectName <- paste0(date, "_", ProjectTitle)
 if(dir.exists(paste0("/share/ScratchGeneral/jerven/Hansbro_data/Analysis/", ProjectName))){
   stop("Directory belonging to this ProjectName already exists. \n  Please choose another ProjectName")

@@ -32,7 +32,7 @@ e.drop <- function(raw_matrix_counts, project.name, saveDir){
 
   ## Run emptyDrops()
   print("This is going to take a while")
-  e.out <- emptyDrops(m = mycounts.detect, lower = 100)
+  e.out <- emptyDrops(m = mycounts.detect, lower = 100, ignore = 1)
   print("This took a while")
   print(e.out)
 
@@ -67,6 +67,7 @@ e.drop <- function(raw_matrix_counts, project.name, saveDir){
 
   #Calculate percentage mitochondrial genes
   seurat.ok[["percent.mt"]] <- PercentageFeatureSet(seurat.ok, pattern = "^mt-")
+  seurat.ok <- subset(seurat.ok, subset = nFeature_RNA <= 4000)   #Cut off all cells with more than 4000 features
   seurat.empty[["percent.mt"]] <- PercentageFeatureSet(seurat.empty, pattern = "^mt-")
 
   saveDir <- saveDir

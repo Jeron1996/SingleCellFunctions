@@ -169,3 +169,8 @@ for(re_regressed in resol_regressed){
   markers <- FindAllMarkers(object = seurat_regressed, assay = "SCT", slot = "data", logfc.threshold = 0.25)
   saveRDS(object = markers, file=paste0(de_dir, "/", re_regressed, "MT_regressed_markers.RDS"))
 }
+
+##Save a session info file with information of the packages attached and which version of it was used.
+sink(paste0("/share/ScratchGeneral/jerven/Rhapsody/Analysis/", ProjectName, "/sessionInfo.txt"))
+sessionInfo()
+sink()

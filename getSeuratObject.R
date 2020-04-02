@@ -115,6 +115,12 @@ seurat_merged <- CellCycleScoring(object = seurat_merged, s.features = s.genes, 
 #Save Seurat Object
 saveRDS(object = seurat_merged, file = paste0(seurat_dir, "/", ProjectName, ".RDS"))
 
+#Save expresson matrix and metadata, needed for SingleR
+meta <- seurat_merged@meta.data
+saveRDS(object = meta, file = paste0(seurat_dir, "/MetaData.RDS"))
+expression <- GetAssayData(object=seurat_merged, assay = "SCT", slot = "data")
+saveRDS(object = expression, file = paste0(seurat_dir, "/SCT_data_expression.RDS"))
+       
 #Make and save several Plots
 plots_cluster(seurat.object = seurat_merged, save.name = ProjectName, dir = plot_dir)
 
@@ -158,6 +164,12 @@ seurat_regressed <- RunUMAP(seurat_regressed, dims = 1:25)
 #Save Regressed seurat output
 saveRDS(object = seurat_regressed, file = paste0(seurat_dir, "/", ProjectName, "_MT_regressed.RDS"))
 
+#Save expresson matrix and metadata, needed for SingleR
+meta_regressed <- seurat_regressed@meta.data
+saveRDS(object = meta_regressed, file = paste0(seurat_dir, "/MetaData_regressed.RDS"))
+expression_regressed <- GetAssayData(object=seurat_regressed, assay = "SCT", slot = "data")
+saveRDS(object = expression_regressed, file = paste0(seurat_dir, "/SCT_data_expression_regressed.RDS"))
+       
 #Make plots
 plots_cluster(seurat.object = seurat_regressed, save.name = paste0(ProjectName, "_MT_regressed"), dir = plot_dir)
 

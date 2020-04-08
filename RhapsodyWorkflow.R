@@ -22,7 +22,7 @@ date <- Sys.Date()
 date <- format(date, "%y%m%d")
 ProjectTitle <- "Nova_bothLanes"
 ProjectName <- paste0(date, "_", ProjectTitle)
-if(dir.exists(paste0("/share/ScratchGeneral/jerven/Rhapsody/Analysis", ProjectName))){
+if(dir.exists(paste0("/share/ScratchGeneral/jerven/Rhapsody/Analysis/", ProjectName))){
   stop("Directory belonging to this ProjectName already exists. \n  Please choose another ProjectName")
 }
 dir.path <- paste0("/share/ScratchGeneral/jerven/Rhapsody/Analysis", ProjectName, "/", c("Plots", "SeuratObjects", "DEgenes"))

@@ -21,6 +21,12 @@ plots_cluster <- function(seurat.object, save.name, dir){
   Norig.ident <- DimPlot(object = obj, group.by = "orig.ident", label = T)
   ggsave(filename = paste0(plot_dir, "/", sv.name, "_OrigIdent.pdf"), plot = Norig.ident, device = "pdf", width = 10, height = 10)
 
+  NtagID <- DimPlot(object = obj, group.by = "Sample_Tag", label = T)
+  ggsave(filename = paste0(plot_dir, "/", sv.name, "_Sample_Tag.pdf"), plot = NtagID, device = "pdf", width = 10, height = 10)
+
+  NsampelName <- DimPlot(object = obj, group.by = "Sample_Name", label = T)
+  ggsave(filename = paste0(plot_dir, "/", sv.name, "_Sample_Name.pdf"), plot = NsampelName, device = "pdf", width = 10, height = 10)
+
   ## Plot DimPlots for all resolutions
   resolution <- names(obj@meta.data)
   resolution <- resolution[grepl(pattern = "res.", x = resolution)]

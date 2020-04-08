@@ -9,6 +9,7 @@ library(dplyr)
 library(Matrix)
 library(devtools)
 source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/Rhapsody/QC_plots_Rhapsody.R")
+source_url("https://raw.githubusercontent.com/Jeron1996/SingleCellFunctions/Rhapsody/hashing_rhapsody.R")
 set.seed(160396)
 
 ##Choose normalization method
@@ -19,7 +20,7 @@ print(paste0("Normalization method: ", norm.method))
 ##Create a new output directory for this analysis run
 date <- Sys.Date()
 date <- format(date, "%y%m%d")
-ProjectTitle <- "RhapsodyTestRun"
+ProjectTitle <- "Nova_bothLanes"
 ProjectName <- paste0(date, "_", ProjectTitle)
 if(dir.exists(paste0("/share/ScratchGeneral/jerven/Rhapsody/Analysis", ProjectName))){
   stop("Directory belonging to this ProjectName already exists. \n  Please choose another ProjectName")
@@ -28,7 +29,7 @@ dir.path <- paste0("/share/ScratchGeneral/jerven/Rhapsody/Analysis", ProjectName
 sapply(dir.path, function(X) dir.create(path = X, recursive = T))
 
 ##Directories and variables needed
-raw_data_dirs <- "/share/ScratchGeneral/jerven/Rhapsody/ELF5/ELF5_RSEC_MolsPerCell.csv"
+raw_data_dirs <- "/share/ScratchGeneral/jerven/Rhapsody/Nova/BothLanes/_1_Combined_AAGAGGCA_DBEC_MolsPerCell.csv"
 pro.name <- "TestRun"
 plot_dir <- dir.path[1]
 seurat_dir <- dir.path[2]
@@ -45,7 +46,10 @@ ENSMBL_ID <- sapply(X=gene_merged, FUN = function(X) X[2]) #Select Ensmlb IDs
 colnames(umi_reads) <- GeneSymbol #Set Gene symbols as gene names
 umi_reads <- t(umi_reads) #transpose counts, so that it can be read by Seurat
 
-umi_Reads <- CreateSeuratObject(counts = umi_reads, project = "RhapsodyTest", min.cells = 1, min.features = 1)
+umi_Reads <- CreateSeuratObject(counts = umi_reads, project = ProjectTitle, min.cells = 1, min.features = 1)
+
+#Add sample demultiplexing information
+umi_Reads <- hashing_rhapsody(rhap_obj = umi_Reads)
 
 ##Choose which normalization method to perform on the merged data.
 if(norm.method == "SCTransform"){ #Perform SCTransform normalization
@@ -75,6 +79,10 @@ for(res in resolution){
 
 #Save Seurat Object
 saveRDS(object = umi_Reads, file = paste0(seurat_dir, "/", ProjectName, ".RDS"))
+
+#save objects for SingleR workflow on local machine
+expression <- GetAssayData(object = umi_Reads, assay = "SCT", slot = "data")
+saveRDS(object = expression, file = paste0(seurat_dir, "/SCT_data_expression.RDS"))
 
 #Make and save several Plots
 plots_cluster(seurat.object = umi_Reads, save.name = ProjectName, dir = plot_dir)

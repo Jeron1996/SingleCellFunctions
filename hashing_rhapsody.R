@@ -1,5 +1,5 @@
 ##Function to add sample demultiplexing information to a Rhapsody Seurat object.
-hashing_rhapsody <- function(rhap_obj, names_given == FALSE){
+hashing_rhapsody <- function(rhap_obj, names_given = FALSE){
   #read in hashing file
   hashing_info <- read.csv("/share/ScratchGeneral/jerven/Rhapsody/Nova/BothLanes/_1_AAGAGGCA_Sample_Tag_Calls.csv", comment.char="#", stringsAsFactors=FALSE)
 

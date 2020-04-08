@@ -18,7 +18,7 @@ hashing_rhapsody <- function(rhap_obj, names_given = FALSE){
     tag_translation <- data.frame("tag"=c("SampleTag01_mm", "SampleTag03_mm", "SampleTag02_mm", "Undetermined", "Multiplet", "SampleTag05_mm"),
                                   "name"=c("4T1_tumor", "67NR_tumor", "4T1_lung", "Undetermined", "Multiplet", "67NR_lung"))
     for(tag in tag_translation$tag){
-    cell_sampleName[cell_sampleName == tag] <- tag_translation[tag_translation$tag == tag, "name"]
+    cell_sampleName[cell_sampleName == tag] <- as.character(tag_translation[tag_translation$tag == tag, "name"])
     }
   }
 

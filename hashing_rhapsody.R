@@ -1,5 +1,5 @@
 ##Function to add sample demultiplexing information to a Rhapsody Seurat object.
-hashing_rhapsody <- function(rhap_obj, names_given = FALSE, tag_info){
+hashing_rhapsody <- function(rhap_obj, names_given = FALSE, tag_info, tag_translation){
   #read in hashing file
   hashing_info <- read.csv(tag_info, comment.char="#", stringsAsFactors=FALSE)
 
@@ -15,8 +15,6 @@ hashing_rhapsody <- function(rhap_obj, names_given = FALSE, tag_info){
 
   #If sample names were not give, translate the tag IDs into the right sample names
   if(!names_given){
-    tag_translation <- data.frame("tag"=c("SampleTag01_mm", "SampleTag03_mm", "SampleTag02_mm", "Undetermined", "Multiplet", "SampleTag05_mm"),
-                                  "name"=c("4T1_tumor", "67NR_tumor", "4T1_lung", "Undetermined", "Multiplet", "67NR_lung"))
     for(tag in tag_translation$tag){
     cell_sampleName[cell_sampleName == tag] <- as.character(tag_translation[tag_translation$tag == tag, "name"])
     }

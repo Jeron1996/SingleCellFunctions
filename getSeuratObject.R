@@ -76,6 +76,7 @@ for(hashing_file in hashing_files){
   cell_prefix <- strsplit(x = cell_prefix, split = "collection")[[1]][2]
   seurat.obj.emptydrop <- readRDS(file = paste0(hashing.dir, "/", hashing_file))
   seurat.obj.emptydrop <- RenameCells(object = seurat.obj.emptydrop, add.cell.id = paste0("c", cell_prefix))
+  seurat.obj.emptydrop <- subset(seurat.obj.emptydrop, subset = HTO_classification.global == "Singlet")
   seurat_list <- append(value=seurat.obj.emptydrop, x=seurat_list)
 }
 

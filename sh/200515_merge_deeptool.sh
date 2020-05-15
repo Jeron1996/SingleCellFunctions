@@ -3,6 +3,7 @@
 cluster=$1
 outputDir=$2
 
+#Set file name for the merged bam file
 out=${outputDir}${cluster}/merged_${cluster}.bam
 bams="$(ls -d ${outputDir}${cluster}/*.bam )"
 echo ${out}

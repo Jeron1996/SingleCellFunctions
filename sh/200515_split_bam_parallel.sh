@@ -16,6 +16,8 @@ script1="/share/ScratchGeneral/jerven/ATAC_seq/Final_test/200515_split_samples.s
 
 #Script needed to start the second parallel, to merge all bam files off one cluster and make bigwig/BedGraph files
 script2="/share/ScratchGeneral/jerven/ATAC_seq/Final_test/200515_merge_deeptool.sh"
+
+
 #Make a directory for all the split bam files. Change "n" and "N" according to the lowest and highest cluster number. Also change "j" and "J" at the end of the script
 #This was written for clusters IDs which are distringuished by numbers. I don't know if it also works if cluster IDs are words
 output_dir=${sampleDir}../split_by_cluster/

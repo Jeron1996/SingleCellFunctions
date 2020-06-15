@@ -65,7 +65,7 @@ QC_plots_emptydrop <- function(seuratObj.ok, seuratObj.empty, low = low, pro.nam
   plot(Vln_mt)
   dev.off()
 
-  boxplot.list <- list(df.feat.comb, df.feat.comb)
+  boxplot.list <- list(df.feat.comb, df.count.comb)
   names(boxplot.list) <- c("boxplot_data_features", "boxplot_data_counts")
   list.name <- paste0(saveDir, "/", pro.name,"_lower-", low, "_FDR-", FDR, "_boxplotData.rds")
   saveRDS(object = boxplot.list, file = list.name)

@@ -38,7 +38,7 @@ e.drop <- function(raw_matrix_counts, project.name, saveDir){
 
   ##Create dgcMatrix with cell and empty droplets
 
-  is.cell <- e.out$FDR <= 0.05
+  is.cell <- e.out$FDR <= 0.001
   print("if sig == FALSE and limited == TRUE is > 0, increase niter in emptydrops")
   print(table(Limited=e.out$Limited, Significant=is.cell))
 

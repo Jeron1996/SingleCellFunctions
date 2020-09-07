@@ -72,7 +72,7 @@ e.drop <- function(raw_matrix_counts, project.name, saveDir){
 
   saveDir <- saveDir
 
-  QC_plots_emptydrop(seuratObj.ok = seurat.ok, seuratObj.empty = seurat.empty, pro.name = project.name, low = 100, FDR = 0.05, saveDir = saveDir, eOut = e.out)
+  QC_plots_emptydrop(seuratObj.ok = seurat.ok, seuratObj.empty = seurat.empty, pro.name = project.name, low = 100, FDR = 0.001, saveDir = saveDir, eOut = e.out)
 
   seurat.ok
 }

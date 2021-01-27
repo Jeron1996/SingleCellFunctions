@@ -74,5 +74,9 @@ e.drop <- function(raw_matrix_counts, project.name, saveDir){
 
   QC_plots_emptydrop(seuratObj.ok = seurat.ok, seuratObj.empty = seurat.empty, pro.name = project.name, low = 100, FDR = 0.001, saveDir = saveDir, eOut = e.out)
 
+  #Save the Seurat object with the empty cells, to enable investigation of these cells if necessary.
+  saveRDS(seurat.empty, file = paste0(saveDir, "/", project.name, "_SeuratObject_with_empty_droplets.RDS"))
+
+  #Return Seurat Object with the non-empty droplets.
   seurat.ok
 }
